@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Currency Exchange</title>
+        <style>
+            #show {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                document.querySelector('#inverse').disabled = true;
+
+                fetch('http://api.currencylayer.com/live?access_key=b2ac9cdf32ab43c4d02400992a0e0580')
+                .then(response => response.json())
+                .then(data => {
+                    const resultrates = Object.keys(data.quotes);
+                    let codes = ["   "];
+                    for(let i = 0; i < resultrates.length; i++) {
+                        codes.push(resultrates[i].substring(3,6));
+                    }
+                    codes.sort();
+                    console.log(codes);
+                    for(let i = 0; i < codes.length; i++) {
+                        var opt = document.createElement('option');
+                        opt.value = codes[i];
+                        opt.innerHTML = codes[i];
+                        document.querySelector('#selectoptions1').appendChild(opt);
+                    }
+                    for(let i = 0; i < codes.length; i++) {
+                        var opt = document.createElement('option');
+                        opt.value = codes[i];
+                        opt.innerHTML = codes[i];
+                        document.querySelector('#selectoptions2').appendChild(opt);
+                    }
+                })
+                .catch(error => {
+                    console.log("Error : ", error);
+                });
+
+                document.querySelector('#convert').onclick = () => {
+                    
+                    fetch('http://api.currencylayer.com/live?access_key=b2ac9cdf32ab43c4d02400992a0e0580')
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const input1 = parseFloat(document.querySelector('#input1').value, 6);
+
+                        const option1 = document.querySelector('#selectoptions1').value;
+                        const option2 = document.querySelector('#selectoptions2').value;
+
+                        const rate1 = data.quotes["USD"+option1];
+                        const rate2 = data.quotes["USD"+option2];
+
+                        let rate = (rate2 / rate1).toFixed(2);
+
+                        if(rate1 !== undefined && rate2 !== undefined) {
+                            document.querySelector('#result').innerHTML = `${input1.toFixed(2)} ${option1} = ${(rate * input1).toFixed(2)} ${option2}`;
+                            document.querySelector('#inverse').disabled = false;
+
+                            document.querySelector('#inverse').onclick = () => {
+                                rate = (rate1 / rate2).toFixed(2);
+                                if(rate !== undefined) {
+                                    document.querySelector('#result').innerHTML = `${input1.toFixed(2)} ${option2} = ${(rate * input1).toFixed(2)} ${option1}`;
+                                }
+                                else {
+                                    document.querySelector('#result').innerHTML = "Invalid Currency Exchange Code";
+                                }
+                                document.querySelector('#inverse').disabled = true;
+                            }
+                        }
+                        else {
+                            document.querySelector('#result').innerHTML = "Invalid Currency Exchange Code";
+                        }
+                        
+                    })
+                    .catch(error => {
+                        console.log("Error : ", error);
+                    });
+                    
+                    return false;
+                }
+
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div id="show">
+            <div id="heading">Currency Converter</div>
+            <div id="frominput">
+                <input id="input1" style="text-align: right" type="text" placeholder="0">
+                <select id="selectoptions1">
+                </select>
+            </div>
+            <div id="toinput">
+                <select id="selectoptions2">
+                </select>
+                <input id="convert" type="submit" value="Convert">
+                <input id="inverse" type="submit" value="Inverse">
+            </div>
+            <div id="result"></div>
+        </div>
+    </body>
+</html>

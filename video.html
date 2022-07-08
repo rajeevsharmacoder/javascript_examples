@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Video Page</title>
+        <style>
+            .video_wrapper {
+                position: relative;
+                padding-bottom: 55.85%;
+                height: 0px;
+            }
+            .video_wrapper #myvideo {
+                position: absolute;
+                left: 0px;
+                top: 0 px;
+                right: 0px;
+                bottom: 0px;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // document.querySelector('#myvideo').muted = false;
+                document.querySelector('#myvideo').play();
+                document.querySelector('#myvideo').muted = false;
+            });
+        </script>
+    </head>
+    <body>
+        <div class="video_wrapper">
+            <!-- <iframe src="https://www.youtube.com/embed/OOy764mDtiA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay loop muted></iframe> -->
+            <video id="myvideo" controls muted>
+                <source src="small.webm" type="video/webm">
+                This browser does not support to video tag.
+            </video>
+        </div>
+    </body>
+</html>
